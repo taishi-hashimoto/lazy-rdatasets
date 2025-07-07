@@ -19,38 +19,37 @@ pip install .
 This is almost the same as [statsmodels.datasets.get_rdatasets](https://www.statsmodels.org/stable/datasets/statsmodels.datasets.get_rdataset.html).
 
 ```Python
-from rdatasets
+>>> from rdatasets import Rdatasets
 
-rd = Rdatasets.find(package="palmerpenguins", item="penguin", exact=True)
-rd
+>>> rd = Rdatasets.find(package="palmerpenguins", item="penguin", exact=True)
 ```
 
 #### 2. Search a string in the title of datasets
 
-```Python
-from rdatasets import Rdatasets
+Find datasets that have "penguin" in their title:
 
-# Find datasets that have "penguin" in their title.
-rd = Rdatasets.find(title="penguin")
-rd
+```Python
+>>> from rdatasets import Rdatasets
+
+>>> rd = Rdatasets.find(title="penguin")
 ```
 
 #### 3. Filtering datasets that contains particular types of variables
 
-```Python
-from rdatasets import Rdatasets
+Find datasets that have categorical variables:
 
-# Find datasets that have categorical variables.
-rd = Rdatasets.find(categorical=True)
-rd
+```Python
+>>> from rdatasets import Rdatasets
+
+>>> rd = Rdatasets.find(categorical=True)
 ```
 
-```Python
-from rdatasets import Rdatasets
+Find datasets that have only one numeric variables with more than 99 samples:
 
-# Find datasets that have only one numeric variables with more than 99 samples.
-rd = Rdatasets.find(numeric=True, nmin=100, pmax=1)
-rd
+```Python
+>>> from rdatasets import Rdatasets
+
+>>> rd = Rdatasets.find(numeric=True, nmin=100, pmax=1)
 ```
 
 ### Getting a single dataset from Rdatasets
@@ -58,19 +57,17 @@ rd
 Below, `rd` is the output of the following code block:
 
 ```Python
-from rdatasets import Rdatasets
+>>> from rdatasets import Rdatasets
 
-rd = Rdatasets.find(title="penguin")
+>>> rd = Rdatasets.find(title="penguin")
 ```
 
 #### 1. Show the list of datasets that matched the conditions
 
 ```Python
-rd  # On jupyter, this will show the same result as below.
-rd.catalog  # Show the repr of DataFrame
-```
+>>> rd  # On jupyter, this will show the same result as below.
+>>> rd.catalog  # Show the repr of DataFrame
 
-```
         Package	        Item	                Title   ...
 567     bayesrules	    penguins_bayes	        Penguins Data
 1694	heplots	        peng	                Size measurements ...
@@ -82,10 +79,8 @@ rd.catalog  # Show the repr of DataFrame
 #### 2. Pick the first dataset in the list
 
 ```Python
-rd.first
-```
+>>> rd.first
 
-```
 #️⃣ Index  : 567
 📦 Package: bayesrules
 📄 Item   : penguins_bayes
@@ -103,12 +98,9 @@ rd.first
 #### 3. Acceess by `Index` and position in the catalog
 
 ```Python
-rd[2559]  # Get the Dataset with its index 2559 (pandas.DataFrame.loc)
-# or ...
-rd.at(3)  # Get the Dataset at position 3 in the catalog (pandas.DataFrame.iloc)
-```
+>>> rd[2559]  # Get the Dataset with its index 2559 (pandas.DataFrame.loc), or ...
+>>> rd.at(3)  # Get the Dataset at position 3 in the catalog (pandas.DataFrame.iloc)
 
-```
 #️⃣ Index  : 2559
 📦 Package: palmerpenguins
 📄 Item   : penguins
@@ -126,12 +118,9 @@ rd.at(3)  # Get the Dataset at position 3 in the catalog (pandas.DataFrame.iloc)
 ### Getting the dataframe
 
 ```Python
-ds = rd[2559]
+>>> ds = rd[2559]
+>>> ds.data  # -> pandas.DataFrame
 
-ds.data  # -> pandas.DataFrame
-```
-
-```
    rownames species     island  bill_length_mm  bill_depth_mm ...
 0         1  Adelie  Torgersen            39.1           18.7
 1         2  Adelie  Torgersen            39.5           17.4
@@ -143,11 +132,13 @@ ds.data  # -> pandas.DataFrame
 
 ### Quicklook
 
+Selected dataset can be easily quicklooked:
+
 ```Python
-ds.quicklook()
+>>> ds.quicklook()
 ```
 
-|    |     |
-|----|-----|
-|![fig_missing](doc/fig_missing.png) | ![fig_categorical](doc/fig_categorical.png)
-|![fig_numeric](doc/fig_numeric.png) | ![fig_pca](doc/fig_pca.png)
+|Missing Values|Categorical Variables|Numeric Variables(p≧1)|Numerical Variables (p≧3)|
+|----|-----|------|----------|
+|![fig_missing](doc/fig_missing.png) | ![fig_categorical](doc/fig_categorical.png)|![fig_numeric](doc/fig_numeric.png) | ![fig_pca](doc/fig_pca.png)
+|Heatmap|Bar plots|Scatter matrix (p≧2) / histogram (p=1)|PCA projection (p≧3)
