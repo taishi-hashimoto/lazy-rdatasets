@@ -1,6 +1,6 @@
 # rdatasets
 
-Convenience interface of Rdatasets for lazy data scientists.
+Convenience interface of [Rdatasets](https://vincentarelbundock.github.io/Rdatasets/index.html) for lazy data scientists.
 
 ## Key features
 
