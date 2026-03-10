@@ -1,4 +1,4 @@
-# rdatasets
+# lazy-rdatasets
 
 Convenience interface of [Rdatasets](https://vincentarelbundock.github.io/Rdatasets/index.html) for lazy data scientists.
 
@@ -13,7 +13,7 @@ Convenience interface of [Rdatasets](https://vincentarelbundock.github.io/Rdatas
 Use pip:
 
 ```
-pip install .
+pip install lazy-rdatasets
 ```
 
 ## Usage
@@ -21,9 +21,9 @@ pip install .
 ### List all available datasets
 
 ```Python
-from rdatasets import Rdatasets
+from lazyrdatasets import LazyRdatasets
 
-rd = Rdatasets()
+rd = LazyRdatasets()
 rd
 ```
 
@@ -44,9 +44,9 @@ rd
 This is almost the same as [statsmodels.datasets.get_rdatasets](https://www.statsmodels.org/stable/datasets/statsmodels.datasets.get_rdataset.html).
 
 ```Python
-from rdatasets import Rdatasets
+from lazyrdatasets import LazyRdatasets
 
-rd = Rdatasets.find(package="palmerpenguins", item="penguin", exact=True)
+rd = LazyRdatasets.find(package="palmerpenguins", item="penguin", exact=True)
 ```
 
 #### 2. Search a string in the title of datasets
@@ -54,9 +54,9 @@ rd = Rdatasets.find(package="palmerpenguins", item="penguin", exact=True)
 Find datasets that have "penguin" in their title:
 
 ```Python
-from rdatasets import Rdatasets
+from lazyrdatasets import LazyRdatasets
 
-rd = Rdatasets.find(title="penguin")
+rd = LazyRdatasets.find(title="penguin")
 ```
 
 #### 3. Filtering datasets that contains particular types of variables
@@ -64,17 +64,17 @@ rd = Rdatasets.find(title="penguin")
 Find datasets that have categorical variables:
 
 ```Python
-from rdatasets import Rdatasets
+from lazyrdatasets import LazyRdatasets
 
-rd = Rdatasets.find(categorical=True)
+rd = LazyRdatasets.find(categorical=True)
 ```
 
 Find datasets that have only one numeric variables with more than 99 samples:
 
 ```Python
-from rdatasets import Rdatasets
+from lazyrdatasets import LazyRdatasets
 
-rd = Rdatasets.find(numeric=True, nmin=100, pmax=1)
+rd = LazyRdatasets.find(numeric=True, nmin=100, pmax=1)
 ```
 
 ### Getting a single dataset from Rdatasets
@@ -82,9 +82,9 @@ rd = Rdatasets.find(numeric=True, nmin=100, pmax=1)
 Below, `rd` is the output of the following code block:
 
 ```Python
-from rdatasets import Rdatasets
+from lazyrdatasets import LazyRdatasets
 
-rd = Rdatasets.find(title="penguin")
+rd = LazyRdatasets.find(title="penguin")
 ```
 
 #### 1. Show the list of datasets that matched the conditions
