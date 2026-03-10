@@ -46,7 +46,7 @@ This is almost the same as [statsmodels.datasets.get_rdatasets](https://www.stat
 ```Python
 from lazyrdatasets import LazyRdatasets
 
-rd = LazyRdatasets.find(package="palmerpenguins", item="penguin", exact=True)
+rd = LazyRdatasets.find(package="palmerpenguins", item="penguins", exact=True)
 ```
 
 #### 2. Search a string in the title of datasets

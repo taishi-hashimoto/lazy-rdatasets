@@ -3,6 +3,7 @@
 Rdatasets:
   https://vincentarelbundock.github.io/Rdatasets/index.html
 """
+
 import random
 from io import BytesIO
 import requests_cache
@@ -19,20 +20,21 @@ CACHE_PATH = expanduser("~/.pda/rdatasets.sqlite3")
 "Path to the cache file."
 
 
-class Rdatasets:
+class LazyRdatasets:
     "Convenience interface of Reatasets for lazy data scientists."
 
     class Dataset:
         "Single dataset, i.e., a csv file."
 
-        def __init__(self, parent: 'Rdatasets', index: int):
+        def __init__(self, parent: "LazyRdatasets", index: int):
             self.parent = parent
             self.index = index
             with self.parent.session:
                 self.doc = self.parent.session.get(self.doc_url).text
                 self.data = pd.read_csv(
                     BytesIO(self.parent.session.get(self.csv_url).content),
-                    encoding_errors="ignore")
+                    encoding_errors="ignore",
+                )
 
         @property
         def catalog(self) -> pd.DataFrame:
@@ -101,20 +103,22 @@ class Rdatasets:
             quicklook_dataframe(self.data, maxcols=pmax)
 
         def __str__(self):
-            return "\n".join([
-                f"#️⃣ Index  : {self.index}",
-                f"📦 Package: {self.package}",
-                f"📄 Item   : {self.item}",
-                f"📚 Title  : {self.title}",
-                f"📐 Shape  : {self.shape}",
-                f"  ⚖️ Binary   : {self.n_binary}",
-                f"  🔤 Character: {self.n_character}",
-                f"  🧮 Factor   : {self.n_factor}",
-                f"  🔘 Logical  : {self.n_logical}",
-                f"  🔢 Numeric  : {self.n_numeric}",
-                f"🔗 CSV: {self.csv_url}",
-                f"🔗 Doc: {self.doc_url}"
-            ])
+            return "\n".join(
+                [
+                    f"#️⃣ Index  : {self.index}",
+                    f"📦 Package: {self.package}",
+                    f"📄 Item   : {self.item}",
+                    f"📚 Title  : {self.title}",
+                    f"📐 Shape  : {self.shape}",
+                    f"  ⚖️ Binary   : {self.n_binary}",
+                    f"  🔤 Character: {self.n_character}",
+                    f"  🧮 Factor   : {self.n_factor}",
+                    f"  🔘 Logical  : {self.n_logical}",
+                    f"  🔢 Numeric  : {self.n_numeric}",
+                    f"🔗 CSV: {self.csv_url}",
+                    f"🔗 Doc: {self.doc_url}",
+                ]
+            )
 
         def __repr__(self):
             return self.__str__()
@@ -130,12 +134,12 @@ class Rdatasets:
         if catalog is None:
             with self.session:
                 catalog = pd.read_csv(
-                    BytesIO(self.session.get(url).content),
-                    encoding_errors="ignore")
+                    BytesIO(self.session.get(url).content), encoding_errors="ignore"
+                )
         self.catalog = catalog
 
     @staticmethod
-    def find(*args, **kwargs) -> 'Rdatasets':
+    def find(*args, **kwargs) -> "LazyRdatasets":
         """Find datasets based on conditions.
 
         Parameters
@@ -147,7 +151,7 @@ class Rdatasets:
         Rdatasets
             Filtered RDatasets object.
         """
-        return Rdatasets().filter(*args, **kwargs)
+        return LazyRdatasets().filter(*args, **kwargs)
 
     def filter(
         self,
@@ -158,8 +162,10 @@ class Rdatasets:
         maxrows: int | None = None,
         mincols: int | None = None,
         maxcols: int | None = None,
-        nmin=None, nmax=None,
-        pmin=None, pmax=None,
+        nmin=None,
+        nmax=None,
+        pmin=None,
+        pmax=None,
         binary=None,
         character=None,
         factor=None,
@@ -168,7 +174,7 @@ class Rdatasets:
         categorical=None,
         pred=None,
         exact: bool = False,
-    ) -> 'Rdatasets':
+    ) -> "LazyRdatasets":
         """Filter datasets based on conditions.
 
         Parameters
@@ -230,10 +236,10 @@ class Rdatasets:
 
         if categorical is not None:
             is_categorical = (
-                (found.n_binary > 0) |
-                (found.n_character > 0) |
-                (found.n_factor > 0) |
-                (found.n_logical > 0)
+                (found.n_binary > 0)
+                | (found.n_character > 0)
+                | (found.n_factor > 0)
+                | (found.n_logical > 0)
             )
             if categorical:
                 found = found[is_categorical]
@@ -263,39 +269,31 @@ class Rdatasets:
             pmax = maxcols
 
         if nmin is not None:
-            found = found[
-                (found.Rows >= nmin)
-            ]
+            found = found[(found.Rows >= nmin)]
         if pmin is not None:
-            found = found[
-                (found.Cols >= pmin)
-            ]
+            found = found[(found.Cols >= pmin)]
         if nmax is not None:
-            found = found[
-                (found.Rows <= nmax)
-            ]
+            found = found[(found.Rows <= nmax)]
         if pmax is not None:
-            found = found[
-                (found.Cols <= pmax)
-            ]
-            
-        return Rdatasets(catalog=found)
+            found = found[(found.Cols <= pmax)]
 
-    def sample(self) -> 'Rdatasets.Dataset':
+        return LazyRdatasets(catalog=found)
+
+    def sample(self) -> "LazyRdatasets.Dataset":
         "Randomly choose a dataset from the catalog and load it."
         index = random.choice(self.catalog.index)
         return self[index]
 
     @property
-    def first(self) -> 'Rdatasets.Dataset':
+    def first(self) -> "LazyRdatasets.Dataset":
         "Get the first dataset in the catalog."
         return self.at(0)
 
-    def __getitem__(self, index) -> 'Rdatasets.Dataset':
+    def __getitem__(self, index) -> "LazyRdatasets.Dataset":
         "Get dataset from index number (loc)."
         return self.Dataset(self, index)
 
-    def at(self, i) -> 'Rdatasets.Dataset':
+    def at(self, i) -> "LazyRdatasets.Dataset":
         "Get dataset from its position (iloc)."
         return self.Dataset(self, self.catalog.index[i])
 
