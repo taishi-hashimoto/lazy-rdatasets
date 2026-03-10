@@ -13,7 +13,7 @@ Convenience interface of [Rdatasets](https://vincentarelbundock.github.io/Rdatas
 Use pip:
 
 ```
-pip install lazy-rdatasets
+pip install lazyrdatasets
 ```
 
 ## Usage
